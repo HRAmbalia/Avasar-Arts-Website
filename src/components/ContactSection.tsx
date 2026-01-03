@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Phone, Mail, MapPin, Clock, Instagram, Facebook, Youtube } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -34,6 +35,33 @@ const socialLinks = [
 ];
 
 const ContactSection = () => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget as HTMLFormElement;
+    const formData = new FormData(form);
+    const name = (formData.get("name") as string) || "";
+    const email = (formData.get("email") as string) || "";
+    const phone = (formData.get("phone") as string) || "";
+    const service = (formData.get("service") as string) || "General Inquiry";
+    const message = (formData.get("message") as string) || "";
+
+    const subject = `[Website] ${service} - ${name}`;
+    const bodyLines = [
+      `Name: ${name}`,
+      `Email: ${email}`,
+      `Phone: ${phone}`,
+      `Service: ${service}`,
+      "",
+      message,
+    ];
+    const body = bodyLines.join("\n");
+
+    const mailto = `mailto:avasararts@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(
+      body
+    )}`;
+    window.location.href = mailto;
+  };
+
   return (
     <section id="contact" className="section-padding bg-background">
       <div className="container-wide mx-auto">
@@ -112,7 +140,7 @@ const ContactSection = () => {
             <h3 className="font-display text-2xl text-foreground mb-6">
               Send a Message
             </h3>
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <label
