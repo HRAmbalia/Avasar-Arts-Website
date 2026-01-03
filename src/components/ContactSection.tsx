@@ -44,6 +44,7 @@ const ContactSection = () => {
     const phone = (formData.get("phone") as string) || "";
     const service = (formData.get("service") as string) || "General Inquiry";
     const message = (formData.get("message") as string) || "";
+    const sendViaWhatsApp = formData.get("viaWhatsApp") !== null;
 
     const subject = `[Website] ${service} - ${name}`;
     const bodyLines = [
@@ -55,6 +56,15 @@ const ContactSection = () => {
       message,
     ];
     const body = bodyLines.join("\n");
+
+    if (sendViaWhatsApp) {
+      // Use WhatsApp link (open in new tab/window). Number must be in international format without + or spaces.
+      const waNumber = "919824077411"; // +91 98240 77411
+      const waText = body;
+      const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(waText)}`;
+      window.open(waUrl, "_blank");
+      return;
+    }
 
     const mailto = `mailto:avasararts@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(
       body
@@ -226,6 +236,17 @@ const ContactSection = () => {
                   className="w-full px-4 py-3 bg-secondary border border-border rounded-lg font-body text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors resize-none"
                   placeholder="Tell us about your event or photography needs..."
                 />
+              </div>
+              <div className="flex items-center gap-3">
+                <input
+                  id="viaWhatsApp"
+                  name="viaWhatsApp"
+                  type="checkbox"
+                  className="w-4 h-4 rounded border-border text-primary bg-secondary focus:ring-0"
+                />
+                <label htmlFor="viaWhatsApp" className="font-body text-sm text-muted-foreground">
+                  Send via WhatsApp instead of email
+                </label>
               </div>
               <Button variant="hero" size="lg" type="submit" className="w-full">
                 Send Message
